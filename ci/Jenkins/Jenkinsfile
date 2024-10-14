@@ -4,6 +4,9 @@ pipeline {
     environment {
         SONAR_PROJECT_KEY = 'devops-demo-project'
         SONAR_SCANNER = 'sonar-scanner' // SonarQube Scanner installed in Jenkins
+        DOCKER_HUB_CREDENTIAL_ID = 'docker-cred'
+        DOCKER_IMAGE_NAME = 'kamran111/devops-demo-project'
+        TAG = 'latest'
     }
   
   
@@ -58,7 +61,8 @@ pipeline {
     steps {
         script {
             // Build the Docker image
-            docker.build("${DOCKER_IMAGE_NAME}:${TAG}")
+           docker.build("${DOCKER_IMAGE_NAME}:${TAG}", "demo-java-app")
+
             
             // Push the Docker image to DockerHub
             withDockerRegistry(credentialsId: env.DOCKER_HUB_CREDENTIAL_ID, url: 'https://index.docker.io/v1/') {
