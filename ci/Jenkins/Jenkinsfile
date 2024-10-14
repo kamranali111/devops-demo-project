@@ -60,16 +60,18 @@ stage('Update Deployment File') {
         GIT_USER_NAME = "kamranali111"
     }
     steps {
-        withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+        // Only use withCredentials if pushing to a private repo
+        // withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
             sh '''
                 git config user.name "${GIT_USER_NAME}"
                 sed -i "s/tag: .*/tag: \"${TAG}\"/" helm/app/values.yaml
                 git add helm/app/values.yaml
                 git commit -m "Update deployment image to version ${TAG}"
-                git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                git push https://github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
             '''
-        }
+        // }
     }
 }
+
   }
 }
